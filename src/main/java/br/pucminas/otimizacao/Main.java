@@ -1,6 +1,6 @@
-package br.pucminas.otimizacao.app;
+package br.pucminas.otimizacao;
 
-import org.gnu.glpk.GLPK;
+import org.gnu.glpk.*;
 
 public class Main {
 

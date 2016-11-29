@@ -3,14 +3,14 @@ package br.pucminas.otimizacao.model;
 /**
  * Created by josue on 11/28/16.
  */
-public class DecisionVariable {
+public class Variable {
 
     private String name;
-    private Double coeficient;
+    private Double coefficient;
 
-    public DecisionVariable(String name, Double coeficient) {
+    public Variable(String name, Double coefficient) {
         this.name = name;
-        this.coeficient = coeficient;
+        this.coefficient = coefficient;
     }
 
     public String getName() {
@@ -21,11 +21,11 @@ public class DecisionVariable {
         this.name = name;
     }
 
-    public Double getCoeficient() {
-        return coeficient;
+    public Double getCoefficient() {
+        return coefficient;
     }
 
-    public void setCoeficient(Double coeficient) {
-        this.coeficient = coeficient;
+    public void setCoefficient(Double coefficient) {
+        this.coefficient = coefficient;
     }
 }
