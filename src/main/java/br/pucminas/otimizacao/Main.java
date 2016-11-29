@@ -1,4 +1,4 @@
-package br.pucminas.otimizacao;
+package br.pucminas.otimizacao.app;
 
 import org.gnu.glpk.GLPK;
 
