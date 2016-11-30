@@ -61,7 +61,7 @@ public class ProblemTest {
         constraints.add(c2);
         constraints.add(c3);
 
-        Problem p = new Problem(ProblemType.MIN, objective, constraints);
+        Problem p = new Problem("MIN", objective, constraints);
         p.solve();
 
         assertEquals(8.461538461538462, p.getValue("z"), 0.001);

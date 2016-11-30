@@ -1,10 +1,10 @@
 package br.pucminas.otimizacao;
 
 import br.pucminas.otimizacao.model.Constraint;
-import br.pucminas.otimizacao.model.ProblemType;
 import br.pucminas.otimizacao.model.Variable;
 import org.gnu.glpk.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.gnu.glpk.GLPKConstants.GLP_DB;
@@ -16,7 +16,7 @@ import static org.gnu.glpk.GLPKConstants.GLP_LO;
  */
 public class Problem {
 
-    private ProblemType type;
+    private String type;
     private List<Variable> objective;
     private List<Constraint> constraints;
     private glp_prob lp;
@@ -25,7 +25,7 @@ public class Problem {
     private SWIGTYPE_p_double val;
     private int ret;
 
-    public Problem(ProblemType type, List<Variable> objective, List<Constraint> constraints) {
+    public Problem(String type, List<Variable> objective, List<Constraint> constraints) {
         this.type = type;
         this.objective = objective;
         this.constraints = constraints;
@@ -55,7 +55,7 @@ public class Problem {
         return 0.0;
     }
 
-    public void solve() {
+    public Object solve() {
 
         setupProblem();
 
@@ -68,12 +68,15 @@ public class Problem {
                 write_lp_solution(lp);
             } else {
                 System.out.println("The problem could not be solved");
+                return "could not be solved";
             }
 
-            GLPK.glp_delete_prob(lp);
+            //GLPK.glp_delete_prob(lp);
         } catch (GlpkException e) {
             e.printStackTrace();
         }
+
+        return null;
     }
 
     private void setupProblem() {
@@ -97,7 +100,7 @@ public class Problem {
     private void defineObjective() {
         GLPK.glp_set_obj_name(lp, "z");
 
-        if (type == ProblemType.MIN)
+        if (type.toLowerCase().equals("min"))
             GLPK.glp_set_obj_dir(lp, GLPKConstants.GLP_MIN);
         else
             GLPK.glp_set_obj_dir(lp, GLPKConstants.GLP_MAX);
@@ -143,6 +146,28 @@ public class Problem {
             }
         }
 
+    }
+
+    public HashMap<String, Double> getSolution() {
+        if (lp == null) return new HashMap<>();
+
+        HashMap<String, Double> map = new HashMap<>();
+        int n;
+        String name;
+        double val;
+        name = GLPK.glp_get_obj_name(lp);
+        val = GLPK.glp_get_obj_val(lp);
+
+        map.put(name, val);
+
+        n = GLPK.glp_get_num_cols(lp);
+        for (int i = 1; i <= n; i++) {
+            name = GLPK.glp_get_col_name(lp, i);
+            val = GLPK.glp_get_col_prim(lp, i);
+            map.put(name, val);
+        }
+
+        return map;
     }
 
     private void write_lp_solution(glp_prob lp) {
